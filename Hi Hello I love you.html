@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Question ❤️</title>
+    <style>
+        :root {
+            --color-bg-primary: #fff0f5;
+            --color-bg-secondary: #ffe4ec;
+            --color-primary: #ff1744;
+            --color-primary-hover: #f50057;
+            --color-text-primary: #2d1b1e;
+            --color-text-secondary: #5d4e51;
+            --color-white: #ffffff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-bg-primary: #1a0f12;
+                --color-bg-secondary: #2d1b1e;
+                --color-primary: #ff4081;
+                --color-primary-hover: #ff80ab;
+                --color-text-primary: #ffffff;
+                --color-text-secondary: #e0e0e0;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0;
+            animation: float-up 4s ease-in infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float-up {
+            0% {
+                opacity: 0;
+                transform: translateY(0) rotate(0deg);
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+
+        .container {
+            background: var(--color-white);
+            padding: 3rem 2rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(255, 23, 68, 0.15);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .emoji {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        h1 {
+            color: #000000;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        p {
+            color: #000000;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .distance-counter {
+            background: var(--color-bg-secondary);
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .distance-number {
+            font-size: 2.5rem;
+            color: var(--color-primary);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .distance-label {
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            margin-top: 2rem;
+            position: relative;
+            min-height: 60px;
+        }
+
+        button {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .btn-yes {
+            background: var(--color-primary);
+            color: var(--color-white);
+            box-shadow: 0 4px 20px rgba(255, 23, 68, 0.3);
+        }
+
+        .btn-yes:hover {
+            background: var(--color-primary-hover);
+            transform: scale(1.05);
+            box-shadow: 0 6px 30px rgba(255, 23, 68, 0.4);
+        }
+
+        .btn-no {
+            background: #000000;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .btn-no:hover {
+            background: #000000;
+        }
+
+        .response-text {
+            color: #000000;
+            font-size: 1.1rem;
+            font-style: italic;
+            margin: 1rem 0;
+            animation: fadeIn 1s ease-out;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--color-bg-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--color-primary);
+            width: 30px;
+            border-radius: 5px;
+        }
+
+        .final-message {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+            color: var(--color-white);
+            border-radius: 16px;
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            box-shadow: 0 10px 40px rgba(255, 23, 68, 0.3);
+        }
+
+        .celebration {
+            font-size: 3rem;
+            animation: celebrate 1s ease-in-out infinite;
+        }
+
+        @keyframes celebrate {
+            0%, 100% {
+                transform: rotate(-10deg);
+            }
+            50% {
+                transform: rotate(10deg);
+            }
+        }
+
+        .share-link {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        .photo-frame {
+            width: 100%;
+            max-width: 300px;
+            margin: 1.5rem auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            border: 4px solid var(--color-white);
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .photo-placeholder {
+            background: var(--color-bg-secondary);
+            aspect-ratio: 4/3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-secondary);
+            font-size: 3rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .emoji {
+                font-size: 4rem;
+            }
+
+            button {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="screen1" class="screen active">
+            <div class="emoji">💌</div>
+            <p>I know I am a little late but there's something I have been meaning to ask you...</p>
+            <button class="btn-yes" onclick="nextScreen(2)">Continue ❤️</button>
+            <div class="progress-dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+
+        <div id="screen2" class="screen">
+            <div class="emoji">🌍</div>
+            <h1>The Distance Between Us</h1>
+            <div class="photo-frame">
+                <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/f77e8632-a7ae-455c-84d3-626ce85514ce" alt="Us together" onerror="this.parentElement.innerHTML='<div class=\'photo-placeholder\'>📷</div>'">
+            </div>
+            <div class="distance-counter">
+                <div class="distance-number" id="miles">...</div>
+                <div class="distance-label">miles apart</div>
+                <div class="distance-label" style="font-size: 1.2rem; margin: 1rem 0; font-weight: 600;">AND</div>
+                <div class="distance-number" style="font-size: 1.8rem; margin-top: 1rem;">11</div>
+                <div class="distance-label">time zones (still unfortunately) between us</div>
+            </div>
+            <p>But somehow, you still feel so close to my heart...</p>
+            <button class="btn-yes" onclick="nextScreen(3)">Keep Going 💕</button>
+            <div class="progress-dots">
+                <div class="dot"></div>
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+
+        <div id="screen3" class="screen">
+            <div class="emoji">✨</div>
+            <h1>Every Day With You</h1>
+            <div class="photo-frame">
+                <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/3742457a-e058-4914-af4e-39751cc40448" alt="Special moment" onerror="this.parentElement.innerHTML='<div class=\'photo-placeholder\'>📷</div>'">
+            </div>
+            <p>Thank you for being so patient with me, dodo. You may be a specimen (mareez), but you're also my most precious human being.</p>
+            <button class="btn-yes" onclick="nextScreen(4)">Next 🥰</button>
+            <div class="progress-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot active"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+
+        <div id="screen4" class="screen">
+            <div class="emoji">💝</div>
+            <h1>So here's my question...</h1>
+            <p style="font-size: 1.3rem; font-weight: 600; color: var(--color-primary); margin-bottom: 2rem;">Will you be my Valentine?</p>
+            <div id="conversationArea"></div>
+            <div class="button-container" id="btnContainer">
+                <button class="btn-no" id="btnNo" onclick="handleConversation()">No</button>
+            </div>
+            <div class="progress-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot active"></div>
+            </div>
+        </div>
+
+        <div id="screen5" class="screen">
+            <div class="celebration">🎉💕🎉</div>
+            <h1>YAYYYYY finally 😭❤️</h1>
+            <div class="photo-frame">
+                <img src="IMG_0928.jpeg" alt="Famous red van" onerror="this.parentElement.innerHTML='<div class=\'photo-placeholder\'>📷</div>'">
+            </div>
+            <div class="final-message">
+                It makes me so sad I can't spend this day with you holding your hand and looking into your eyes over some tiramisu while watching Ninja Hattori but I am so excited to spend time with you and here is what I wanna do:<br><br>
+                1. We bake your banana bread<br>
+                2. Make something healthy (your choice)<br>
+                3. Eat it together while watching Ninja Hattori or even Dhurandhar lol<br><br>
+                I love you soooo much and happy 4 months baby 🤍
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentScreen = 1;
+        let conversationStep = 0;
+        const hearts = ['❤️', '💕', '💖', '💗', '💓', '💝'];
+
+        const conversation = [
+            { type: 'button', text: 'No' },
+            { type: 'response', text: 'So mean.... please?' },
+            { type: 'button', text: 'Its still no because you have made me very sad over the last month' },
+            { type: 'response', text: 'Yes but hopefully the gift I send you makes up for it (I wish I was the gift)' },
+            { type: 'button', text: 'Hmmm, still no' },
+            { type: 'response', text: 'Come on dodo, you know you want to say yes 😊💕' },
+            { type: 'button', text: 'Okay finee, I\'ve been waiting forever Adi' }
+        ];
+
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 4000);
+        }
+
+        setInterval(createFloatingHeart, 500);
+
+        function nextScreen(screenNum) {
+            document.getElementById('screen' + currentScreen).classList.remove('active');
+            currentScreen = screenNum;
+            document.getElementById('screen' + screenNum).classList.add('active');
+
+            if (screenNum === 2) {
+                animateDistance();
+            }
+        }
+
+        function animateDistance() {
+            const milesElement = document.getElementById('miles');
+            let count = 0;
+            const target = 8010;
+            const duration = 2000;
+            const increment = target / (duration / 16);
+
+            const timer = setInterval(() => {
+                count += increment;
+                if (count >= target) {
+                    count = target;
+                    clearInterval(timer);
+                }
+                milesElement.textContent = Math.floor(count).toLocaleString();
+            }, 16);
+        }
+
+        function handleConversation() {
+            const conversationArea = document.getElementById('conversationArea');
+            const btnNo = document.getElementById('btnNo');
+            
+            const existingResponses = conversationArea.querySelectorAll('.response-text');
+            existingResponses.forEach(response => {
+                response.style.opacity = '0';
+                response.style.transition = 'opacity 0.3s ease-out';
+                setTimeout(() => response.remove(), 300);
+            });
+            
+            if (conversationStep < conversation.length) {
+                const currentItem = conversation[conversationStep];
+                
+                if (currentItem.type === 'button') {
+                    conversationStep++;
+                    
+                    if (conversationStep >= conversation.length) {
+                        for (let i = 0; i < 50; i++) {
+                            setTimeout(createFloatingHeart, i * 50);
+                        }
+                        nextScreen(5);
+                        return;
+                    }
+                    
+                    const nextItem = conversation[conversationStep];
+                    if (nextItem.type === 'response') {
+                        const responseP = document.createElement('p');
+                        responseP.textContent = nextItem.text;
+                        responseP.className = 'response-text';
+                        conversationArea.appendChild(responseP);
+                        
+                        conversationStep++;
+                    }
+                    
+                    if (conversationStep < conversation.length) {
+                        const nextButton = conversation[conversationStep];
+                        if (nextButton.type === 'button') {
+                            btnNo.textContent = nextButton.text;
+                        }
+                    }
+                }
+            }
+        }
+
+        for (let i = 0; i < 10; i++) {
+            createFloatingHeart();
+        }
+    </script>
+</body>
+</html>
+
